@@ -121,6 +121,13 @@ rule 16 if
      job = J had salary =< 10000 
 then c.
 
+
+% Simple test for "or" - looks for a job where the salary is greater than 100000 (which fails)
+%  OR an employee who's mother is the president (which passes)
+rule testOr if job=_ had salary>1000000 or emp=_ had mother=president then passed.
+
+% Simple test for "not" - affirms that it is NOT true that the job cleaner has a salary over 10000
+rule testNot if not (job=cleaner had salary>10000) then passed.
 % "has" does updates.
 % but this time, "=" means "change that field"  (and  "in,<,>,\=" etc are
 % not supported"
@@ -165,6 +172,10 @@ test(15).
 
 test(16).
 
+% Tests added for functionality of "or" and "not" within had clauses
+test(testOr).
+test(testNot).
+
 % 5555555555555555555555555555555555555555555555555555555555
 
 % get the nepotism rule to fire.
@@ -183,8 +194,10 @@ testNepotism :-
 % Write rules and "test" facts to show that you can handle
 % "or" and "not"
 
-had(X or Y) :- had(X) or had(Y).
+had(X or Y) :- had(X); had(Y).
+had(not X) :- \+ had(X).
 
+% See test section for new tests of "or" and "not"
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
