@@ -183,11 +183,7 @@ testNepotism :-
 % Write rules and "test" facts to show that you can handle
 % "or" and "not"
 
-% "X or Y is true if X is true"
-%or(X, _) :- X.
-% "X or Y is true if Y is true"
-%or(_, Y) :- Y.
-
+had(X or Y) :- had(X) or had(Y).
 
 
 
@@ -203,10 +199,10 @@ b4(X =  Y, Fs)    :- member(X=Y,Fs).
 b4(X in Y, Fs)    :- member(X=Z, Fs), member(Z, Y).
 % inside a had, tests are "=", "\=", ">", "<", ">=", "=<"
 b4(X \= Y, Fs)    :- member(X=Z, Fs), Y \= Z.
-b4(X > Y, Fs)     :- member(X=Z, Fs), Y > Z.
-b4(X < Y, Fs)     :- member(X=Z, Fs), Y < Z.
-b4(X >= Y, Fs)     :- member(X=Z, Fs), Y >= Z.
-b4(X =< Y, Fs)     :- member(X=Z, Fs), Y =< Z.
+b4(X > Y, Fs)     :- member(X=Z, Fs), Z > Y.
+b4(X < Y, Fs)     :- member(X=Z, Fs), Z < Y.
+b4(X >= Y, Fs)     :- member(X=Z, Fs), Z >= Y.
+b4(X =< Y, Fs)     :- member(X=Z, Fs), Z =< Y.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is a complete implementation of "has"
