@@ -201,6 +201,12 @@ had(X =Id had Y)  :- fact(X,Id,Fs),  b4(Y,Fs).
 b4(X had Y,Fs)    :- b4(X,Fs), b4(Y,Fs).
 b4(X =  Y, Fs)    :- member(X=Y,Fs).
 b4(X in Y, Fs)    :- member(X=Z, Fs), member(Z, Y).
+% inside a had, tests are "=", "\=", ">", "<", ">=", "=<"
+b4(X \= Y, Fs)    :- member(X=Z, Fs), Y \= Z.
+b4(X > Y, Fs)     :- member(X=Z, Fs), Y > Z.
+b4(X < Y, Fs)     :- member(X=Z, Fs), Y < Z.
+b4(X >= Y, Fs)     :- member(X=Z, Fs), Y >= Z.
+b4(X =< Y, Fs)     :- member(X=Z, Fs), Y =< Z.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is a complete implementation of "has"
