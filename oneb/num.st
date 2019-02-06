@@ -27,7 +27,7 @@ numInc: x
     (x < lo)
         ifTrue: [lo := x].
     (n > 1)
-        ifTrue: [sd := (m2 / (n - 1 + (10 raisedTo: -32))) raisedTo: 0.5].
+        ifTrue: [sd := (m2 / (n - 1 + (10 raisedTo: -32))) asFloatE sqrt].
     ^x
 !
 
@@ -42,14 +42,13 @@ numDec: x
     mu := mu - (d / n).
     m2 := m2 - (d * (x - mu)).
     (n > 1)
-        ifTrue: [sd := (m2 / (n - 1 + (10 raisedTo: -32))) raisedTo: 0.5].
+        ifTrue: [sd := (m2 / (n - 1 + (10 raisedTo: -32))) asFloatE sqrt].
     ^x
 !!
 
 !Num methodsFor: 'gathering a collection of numbers'!
 nextPutAll: x
-    "TODO: recalculate instance variables based on input list"
+    "recalculate instance variables based on input list"
     x do: [ :item | self numInc: item ]
-    
 !!
 
