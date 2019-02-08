@@ -1,8 +1,8 @@
 FileStream fileIn: 'b4now.st'.
 
-#(10 21 32 43 54) b4Now: [:b4 :now| ((now-b4)/b4) asFloat oo].
+#(10 21 32 43 54) b4Now: [:b4 :now| ((now-b4)/b4) asFloatE oo].
 
-#(1 2 3 5 6) b4Now: [:b4 :now| ((now-b4)/b4) asFloat oo].
+#(1 2 3 5 6) b4Now: [:b4 :now| ((now-b4)/b4) asFloatE oo].
 
 "Expected output"
 "1.1
