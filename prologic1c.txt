@@ -1,0 +1,29 @@
+1d. Give a small example of using LISP hash tables to (1) crete a
+hash table then (2) write something into that hash table then (3)
+read that value back.
+
+>   (defparameter dict '((foo . 1) (bar . 2)))  ;define hash table data
+--> DICT   ;hash table name returned
+>   (cdr(assoc 'foo dict))                      ;get the value of the the key foo
+--> 1      ;return value
+
+
+1e What does the LISP "sublis" function do? Give
+an example..
+
+sublis is a bit like 'find-and-replace' for lisp structures (linked cons cells).
+It takes as parameters an association list (a list of key-value pairs) and a
+lisp structure to perform the replacements in. Any keys in the parameterized
+association list that are found in the parameterized lisp structure are replaced
+with the value for the corresponding key in the former. For example:
+
+>   (sublis '((foo . 42) (bar . 69)) '(myfunc foo bar))
+--> (MYFUNC 42 69)
+
+
+1f. In Prolog, what is the role of the bindings variable "binds".
+
+It binds a value to a variable. Binding is used often when determining
+truth of a query, where there is a variable in a rule for which a
+value has not been found that satisfies the rule. When a value is
+indeed found, it is bound to the variable.
