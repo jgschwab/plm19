@@ -1,11 +1,14 @@
-1d. Give a small example of using LISP hash tables to (1) crete a
+1d. Give a small example of using LISP hash tables to (1) create a
 hash table then (2) write something into that hash table then (3)
 read that value back.
 
->   (defparameter dict '((foo . 1) (bar . 2)))  ;define hash table data
---> DICT   ;hash table name returned
->   (cdr(assoc 'foo dict))                      ;get the value of the the key foo
---> 1      ;return value
+>    (setq hashTable (make-hash-table))
+#S(HASH-TABLE :TEST FASTHASH-EQL)
+>    (setf (gethash 'key1 hashTable) 'value1)
+VALUE1
+>    (gethash 'key1 hashTable)
+VALUE1 ;
+T
 
 
 1e What does the LISP "sublis" function do? Give
