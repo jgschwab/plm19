@@ -1,3 +1,12 @@
+1a.
+An association list is a list of pairs. It keeps track of the association between the two elements in the pair. (x . y) pairs
+
+1b.
+The assoc function searches an association list for an association with the given key. It returns the first instance of association for that key. (?)
+
+1c.
+The function mapcan takes a function and one or more lists. It applies the function to elements with matching indexes. The results are concatenated to form the result.
+
 1d. Give a small example of using LISP hash tables to (1) create a
 hash table then (2) write something into that hash table then (3)
 read that value back.
