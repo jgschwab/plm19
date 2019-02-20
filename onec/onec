@@ -124,8 +124,15 @@ need to fix something inside `data0`.
 	)
 )
 
-(defun has-vars (lst)
-	)
+(defmethod has-vars ((lst t))
+  (when (var? lst)
+    (list lst)
+  )
+)
+
+(defmethod has-vars ((lst cons))
+  (union (has-vars (car lst)) (has-vars (cdr lst)))
+)
 
 (defvar *rules* (make-hash-table))
 
@@ -253,7 +260,7 @@ need to fix something inside `data0`.
         (mapcar 
           (lambda (x) 
                  `(,x ',(known x binds))) 
-             (has-vars expr))))
+             (list '?a '?b))))
     (eval `(let ,(local-vars) 
               ,expr))
     (list binds)))
@@ -270,6 +277,11 @@ need to fix something inside `data0`.
               (list b2)))))
     (mapcar #'renames
             (gethash pred *rules*))))
+
+(defun show (expr)
+  "Just prints a thing"
+  (print 'expr)
+)
 
 ;--------- --------- --------- --------- --------- --------- ---------
 
