@@ -156,6 +156,7 @@ need to fix something inside `data0`.
          (and (= ?a ?b)
               (= ?b ?c)
               (>  ?c 0.3)))
+
   (<- (chain3 ?a ?b)
          (and (= ?a ?b)
               (= ?b ?c)
@@ -163,7 +164,9 @@ need to fix something inside `data0`.
   (<- (chain4 ?a ?b)
          (and (= ?a ?b)
               (= ?b ?c)
-              (not (> ?c 3))
+              ;(not (> ?c 3))
+              (or (< ?c 3)
+              	  (= ?c 3))
               (= ?c 1)))
   (<- (father ?x ?y) 
       (and 
@@ -172,7 +175,7 @@ need to fix something inside `data0`.
   (<- (sibling ?x ?y) 
       (and (parent ?z ?x)
            (parent ?z ?y)
-           (not (equalp ?x ?y)))))
+           (not (= ?x ?y)))))
 
 
 ;--------- --------- --------- --------- --------- --------- ---------
@@ -223,7 +226,7 @@ need to fix something inside `data0`.
     `(dolist (,binds (prove ',question))
        (let ,(mapcar (lambda (v)
                          `(,v (known ',v ,binds)))
-         (has-vars question))
+         (has-vars question))	
    ,@body))))
 
 (defun prove (expr &optional binds)
@@ -232,6 +235,8 @@ need to fix something inside `data0`.
     (or   (ors         (cdr  expr)            binds))
     (not  (negation    (cadr expr)            binds))
     (do   (evals       (cadr expr)            binds))
+    (>    (evals       (cadr expr)            binds))
+    (<    (evals       (cadr expr)            binds))
     (t    (prove1      (car  expr) (cdr expr) binds))))
 
 ;--------- --------- --------- --------- --------- --------- ---------
@@ -255,12 +260,14 @@ need to fix something inside `data0`.
     (let ((?a x) ; where x is computed from (known ?a binds)
           (?b y)); where y is computed from (known ?b binds)
       (print ?a ?b))"
+  ;(print binds)
+  ;(print(known x binds))
   (labels 
     ((local-vars ()
         (mapcar 
           (lambda (x) 
                  `(,x ',(known x binds))) 
-             (list '?a '?b))))
+             (has-vars expr))))
     (eval `(let ,(local-vars) 
               ,expr))
     (list binds)))
