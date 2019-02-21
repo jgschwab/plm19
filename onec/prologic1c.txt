@@ -39,3 +39,12 @@ It binds a value to a variable. Binding is used often when determining
 truth of a query, where there is a variable in a rule for which a
 value has not been found that satisfies the rule. When a value is
 indeed found, it is bound to the variable.
+
+1g.
+The equals rule works as a case of unification. If x can be unified to x, it must be equal to x.
+
+1h.
+Gensym returns a symbol that is guaranteed to be unique.
+
+1i.
+Variable renaming is required to avoid name conflicts between rules. Without renaming, there is no restriction against accessing bindings intended for another scope. Renaming makes recursion possible.
