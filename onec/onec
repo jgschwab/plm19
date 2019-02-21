@@ -1,3 +1,4 @@
+;  vim: set filetype=lisp tabstop=2 shiftwidth=2 expandtab : 
 #|
 
 Help, my Prolog is broken. At the end of this file is a lisp
@@ -175,7 +176,8 @@ need to fix something inside `data0`.
   (<- (sibling ?x ?y) 
       (and (parent ?z ?x)
            (parent ?z ?y)
-           (not (= ?x ?y)))))
+           (not (= ?x ?y)))
+       ))
 
 
 ;--------- --------- --------- --------- --------- --------- ---------
@@ -231,7 +233,7 @@ need to fix something inside `data0`.
 
 (defun prove (expr &optional binds)
   (case (car expr)
-    (and  (ands        (reverse (cdr expr))   binds))
+    (and  (ands        (cdr expr)   binds))
     (or   (ors         (cdr  expr)            binds))
     (not  (negation    (cadr expr)            binds))
     (do   (evals       (cadr expr)            binds))
@@ -287,7 +289,7 @@ need to fix something inside `data0`.
 
 (defun show (expr)
   "Just prints a thing"
-  (print 'expr)
+  (format t "[~A]~%" expr)
 )
 
 ;--------- --------- --------- --------- --------- --------- ---------
