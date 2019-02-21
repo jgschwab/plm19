@@ -44,7 +44,7 @@ indeed found, it is bound to the variable.
 The equals rule works as a case of unification. If x can be unified to x, it must be equal to x.
 
 1h.
-Gensym returns a symbol that is guaranteed to be unique.
+Gensym returns a symbol that is guaranteed to be unique. Gensym with the string "?" uses a question mark as a prefix for that unique symbol.
 
 1i.
 Variable renaming is required to avoid name conflicts between rules. Without renaming, there is no restriction against accessing bindings intended for another scope. Renaming makes recursion possible.
