@@ -165,9 +165,9 @@ need to fix something inside `data0`.
   (<- (chain4 ?a ?b)
          (and (= ?a ?b)
               (= ?b ?c)
-              ;(not (> ?c 3))
-              (or (< ?c 3)
-              	  (= ?c 3))
+              (not (> ?c 3))
+              ;(or (< ?c 3)
+              ;	  (= ?c 3))
               (= ?c 1)))
   (<- (father ?x ?y) 
       (and 
@@ -233,13 +233,12 @@ need to fix something inside `data0`.
 
 (defun prove (expr &optional binds)
   (case (car expr)
-    (and  (ands        (reverse (cdr expr))   binds))
-    (or   (ors         (cdr  expr)            binds))
-    (not  (negation    (cadr expr)            binds))
-    (do   (evals       (cadr expr)            binds))
-    (>    (evals       (cadr expr)            binds))
-    (<    (evals       (cadr expr)            binds))
-    (t    (prove1      (car  expr) (cdr expr) binds))))
+    (and         (ands        (reverse (cdr expr))   binds))
+    (or          (ors         (cdr  expr)            binds))
+    (not         (negation    (cadr expr)            binds))
+    (do          (eval!       (cadr expr)            binds))
+    ((> < <= >=) (eval?       expr                   binds))
+    (t           (prove1      (car  expr) (cdr expr) binds))))
 
 ;--------- --------- --------- --------- --------- --------- ---------
 (defun ands (goals binds)
@@ -257,6 +256,21 @@ need to fix something inside `data0`.
   (unless (prove goal binds)
     (list binds)))
 
+(defun lets (expr binds)
+ `(let ,(mapcar
+          (lambda (x) `(,x ',(known x binds)))
+          (has-vars expr))
+    ,expr))
+
+(defun eval? (expr binds)
+ (if (eval (lets expr binds))
+   (list binds)))
+
+(defun eval! (expr binds)
+ (eval (lets expr binds))
+ (list binds))
+
+#|
 (defun evals (expr binds)
   " turns e.g. (print (list ?a ?b)) into
     (let ((?a x) ; where x is computed from (known ?a binds)
@@ -273,7 +287,7 @@ need to fix something inside `data0`.
     (eval `(let ,(local-vars) 
               ,expr))
     (list binds)))
-
+|#
 (defun prove1 (pred args binds)
   (mapcan 
     (lambda (r)
