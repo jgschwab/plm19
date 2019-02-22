@@ -7,10 +7,7 @@ The assoc function searches an association list for an association with the give
 1c.
 The function mapcan takes a function and one or more lists. It applies the function to elements with matching indexes. The results are concatenated to form the result.
 
-1d. Give a small example of using LISP hash tables to (1) create a
-hash table then (2) write something into that hash table then (3)
-read that value back.
-
+1d.
 >    (setq hashTable (make-hash-table))
 #S(HASH-TABLE :TEST FASTHASH-EQL)
 >    (setf (gethash 'key1 hashTable) 'value1)
@@ -20,9 +17,7 @@ VALUE1 ;
 T
 
 
-1e What does the LISP "sublis" function do? Give
-an example..
-
+1e.
 sublis is a bit like 'find-and-replace' for lisp structures (linked cons cells).
 It takes as parameters an association list (a list of key-value pairs) and a
 lisp structure to perform the replacements in. Any keys in the parameterized
@@ -33,8 +28,7 @@ with the value for the corresponding key in the former. For example:
 --> (MYFUNC 42 69)
 
 
-1f. In Prolog, what is the role of the bindings variable "binds".
-
+1f.
 It binds a value to a variable. Binding is used often when determining
 truth of a query, where there is a variable in a rule for which a
 value has not been found that satisfies the rule. When a value is
