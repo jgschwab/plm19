@@ -241,6 +241,8 @@ need to fix something inside `data0`.
     (t           (prove1      (car  expr) (cdr expr) binds))))
 
 ;--------- --------- --------- --------- --------- --------- ---------
+;The ands method uses reverse so that it will check the back and first operands first as it
+;recursively goes through to towards the middle to check if any of the operands equate to false
 (defun ands (goals binds)
   (if (null goals)
       (list binds)
