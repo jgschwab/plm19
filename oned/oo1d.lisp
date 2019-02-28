@@ -191,7 +191,7 @@ TODO 1c. Implement "data-as-case":
 
 (defun methods-as-case (does)
   (mapcar (lambda (methodName)
-    `(,(car methodName) lambda ,(cadr methodName) ,(caddr methodName)))
+    `(,(car methodName) (lambda ,(cadr methodName) ,(caddr methodName))))
     does)
 )
 
@@ -202,7 +202,7 @@ expand nicely:
 |#
 
 ; but first, uncomment this code
-'(defthing
+(defthing
   account
   :has  ((name) (balance 0) (interest-rate .05))
   :does ((withdraw (amt)
@@ -242,7 +242,7 @@ TODO 1f.. Show the output from the following function
 
 
 ; to run encapuatlion, uncomment the following
-'(encapsulation)
+(encapsulation)
 
 #|
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
