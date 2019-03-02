@@ -308,6 +308,39 @@ structs.
 (defstruct about has does )
 
 #|
+(defmacro defklass (klass &key has does)
+  (let* ((message (gensym "MESSAGE")))
+  	 (setf (gethash klass *meta*)
+         (make-about :has has :does does))
+    `(defun ,klass (&key ,@has) 
+       (let ((,self (lambda (,message)
+         (case ,message
+           ,@(methods-as-case does)
+           ,@(datas-as-case (mapcar #'car has))))))
+       (send ,self '_self! ,self)
+       (send ,self '_isa! ',klass)
+       ,self))))
+|#
+
+(defmacro defklass (klass &key has does isa)
+  (let* ((message (gensym "MESSAGE")))
+  	(let* ((b4          (and isa (gethash isa *meta*)))
+         (has-before  (and b4 (about-has b4)))
+         (does-before (and b4 (about-does b4))))
+  	(setf has (append has has-before))
+  	(setf does (append does does-before))
+  	(setf (gethash klass *meta*)
+         (make-about :has has :does does))
+    `(defun ,klass (&key ,@has)
+       (let ((self (lambda (,message)
+         (case ,message
+           ,@(methods-as-case does)
+           ,@(datas-as-case (mapcar #'car has))))))
+  	   (send self '_self! self)
+       (send self '_isa! ',klass)
+       self)))))
+
+#|
 Also, yu'll need to write a new definition of the "defthing" macro
 which we call "defklass". As a side-effect of creating the lambda,
 it also sends that object a pointer to itself (see "_self!") as
@@ -364,7 +397,7 @@ object
 
 ; uncomment the following when defklass is implemented
 
-'(defklass 
+(defklass 
   object 
   :has ((_self)  (_isa) (id (counter)))
   :does (
@@ -379,7 +412,7 @@ object
                                 slot-values)))))))
 
 ; uncomment the following when defklass is implemented
-'(defklass
+(defklass
   account
   :isa object
   :has  ((name) (balance 0) (interest-rate .05))
@@ -395,7 +428,7 @@ object
 '(xpand (account))
 
 ; uncomment the following when defklass is implemented
-'(defklass
+(defklass
   trimmed-account
   :isa account
   :does ((withdraw (amt)
@@ -415,7 +448,7 @@ object
 
 ; TODO: 3a show that the following works correctly
 
-'(inheritance)
+(inheritance)
 
 '(xpand (trimmed-account))
 ; TODO: 3b. show that the following prints out the slots of an object.
@@ -425,4 +458,4 @@ object
       (print `(meta ,(send acc 'show))
    )))
 
-'(meta)
+(meta)
