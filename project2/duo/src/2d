@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+plot() { gnuplot <<EOF
+	set terminal dumb
+	set border 3
+	set nokey
+	set tics nomirror 
+	set xlabel "x = $1, y = $3"
+	set datafile separator ","
+	plot "/tmp/$$"  using $2:$4 with dots
+EOF
+}
+
+gawk '/^[0-9]/ ' - |
+sort -t, -n -k $2 > /tmp/$$
+plot $1 $2 $3 $4
