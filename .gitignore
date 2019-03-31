@@ -1,2 +1,3 @@
 project2/installs/pycco/
 *.swp
+__pycache__
