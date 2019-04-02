@@ -2,6 +2,8 @@
 
 import sys
 import json
+import random
+
 
 # get rid of all the starting BS
 sys.stdin.readline()
@@ -64,23 +66,39 @@ def parse(token):
     except ValueError:
       return token
 
-# get the rest of the data in chunks
+
 
 it.getNextLine()
-while len(it.line) > 0: # runs for each batch
-  data = []
-  i = 0
-  while len(it.line) > 0 and i < 10 :
-    row = []
+data = []
+maxes = [-999999999] * 8
+mins =   [999999999] * 8
+
+while len(it.line) > 0:
+    row = [] 
     token = it.getNext()
-    while len(token) > 0 : 
-      row.append(parse(token))
-      token = it.getNext()
+    i = 0
+    while len(token) > 0:
+        t = parse(token)
+        if isinstance(t, int) or isinstance(t, float):
+            if maxes[i] < t:
+                maxes[i] = t
+            if mins[i] > t:
+                mins[i] = t
+        row.append(t)
+        token = it.getNext()
+        i += 1
     data.append(row)
     it.getNextLine()
-    i += 1
-  print("{\"weights\": " + json.dumps(weights) + ", \"rows\": " +  json.dumps(data) + "}")
-  it.getNextLine()
+
+#print(data)
+#print(maxes)
+#print(mins)
+n = 100
+for i in range(len(data)):
+    sample = random.sample(data, n)
+    row = data[i]
+    
+    print("{\"weights\": " + json.dumps(weights) + ", \"row\": " +  json.dumps(data[i]) + ", \"sample\":" + json.dumps(sample) + ", \"mins\":" + json.dumps(mins) + ", \"maxes\":" + json.dumps(maxes) + "}")
   
 
 
