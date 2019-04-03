@@ -1,14 +1,11 @@
 import json
-import pdb
 
 
 def dom_score_handler(method, json_data):
-    print(json_data)
     if method == "POST":
         table = Table(json.loads(json_data))
         table.calculate_dom_score()
         dom_scored_row = table.row
-        print(dom_scored_row)
         return json.dumps(dom_scored_row), 200
     else:
         return "Unsupported method", 405
@@ -33,7 +30,7 @@ def mock_request(method, endpoint, *args):
 
 
 def numNorm(x, xmin, xmax):
-    return 0.5 if x is None else (x - xmin) / (xmax - xmin + 10**-32)
+    return 0.5 if x == "?" else (float(x) - float(xmin)) / (float(xmax) - float(xmin) + 10**-32)
 
 
 class Table:
@@ -54,17 +51,18 @@ class Table:
         domScore = 0
         for otherRow in self.sample:
             if self.dom(self.row, otherRow):
-                domScore += 1 / len(self.sample)
+                domScore += 1.0 / len(self.sample)
+        domScore = round(domScore, 2)
         self.row.append(domScore)
         return
 
     def dom(self, row1, row2):
-        pdb.set_trace()
-        n = len(self.weights)
-        s1, s2 = 0, 0
+        n = float(len(self.weights))
+        s1, s2 = 0.0, 0.0
         for column, weight in enumerate(self.weights):
-            a = numNorm(row1[column], self.mins[column], self.maxes[column])
+            a = numNorm(row2[column], self.mins[column], self.maxes[column])
             b = numNorm(row2[column], self.mins[column], self.maxes[column])
-            s1 = s1 - 10**(weight * (a-b)/n)
-            s2 = s2 - 10**(weight * (b-a)/n)
+            s1 = s1 - 10.0**(weight * (a-b)/n)
+            s2 = s2 - 10.0**(weight * (b-a)/n)
         return (s1 / n) < (s2 / n)
+
