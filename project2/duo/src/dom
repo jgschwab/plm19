@@ -2,16 +2,7 @@
 import dom_server as server
 import json
 import sys
-
-#sample_request_data = {
-#        "weights": [1, 0, -1, 1],
-#        "rows": [
-#            [2, 3, 4, 5],
-#            [4, 6, 2, 6],
-#            [5, 6, 2, 6],
-#            [4, 6, 7, 2]]
-#dom_scores, response_code = server.mock_request(
-#        "POST", "domScoredData", json.dumps(sample_request_data))
+import random
 
 # get rid of all the starting BS
 sys.stdin.readline()
@@ -19,10 +10,16 @@ sys.stdin.readline()
 sys.stdin.readline()
 
 
-########  CSV ITERATOR ########
+def iteratorFactory(itType):
+  if itType == "csv":
+    return Iterator(',')
 
-class CsvIterator:
-  def __init__(self):
+
+######## ITERATOR ########
+
+class Iterator:
+  def __init__(self, delim):
+    self.delim = delim
     self.line = ""
     self.idx = 0
 
@@ -35,19 +32,19 @@ class CsvIterator:
       
   def getNext(self):
     s = ""
-    while self.line[self.idx] not in [',','\n']:
+    while self.line[self.idx] not in [self.delim,'\n']:
       #print(self.line[self.idx])
       s += self.line[self.idx]
       self.idx += 1    
-    # ASSERT line[idx] is ',' or '\n'
+    # ASSERT line[idx] is delim or '\n'
     if self.line[self.idx] != '\n':
       self.idx += 1
     return s
     
-###############################  
+############################ 
 
 
-it = CsvIterator()
+it = iteratorFactory('csv')
 
 # create header (weights)
 it.getNextLine()
@@ -103,4 +100,5 @@ for i in range(len(data)):
     row = data[i]
     
     req = "{\"weights\": " + json.dumps(weights) + ", \"row\": " +  json.dumps(data[i]) + ", \"sample\":" + json.dumps(sample) + ", \"mins\":" + json.dumps(mins) + ", \"maxes\":" + json.dumps(maxes) + "}"
+    print(req)
   
