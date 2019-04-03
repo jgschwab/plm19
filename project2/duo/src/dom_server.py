@@ -43,7 +43,7 @@ class Table:
     def __init__(self, json_data):
         self.row = json_data["row"]
         self.sample = json_data["sample"]
-        self.weights = json_data["weights"]
+        self.weights = [float(x) for x in json_data["weights"]]
         self.mins = json_data["mins"]
         self.maxes = json_data["maxes"]
 
@@ -60,7 +60,7 @@ class Table:
         n = float(len(self.weights))
         s1, s2 = 0.0, 0.0
         for column, weight in enumerate(self.weights):
-            a = numNorm(row2[column], self.mins[column], self.maxes[column])
+            a = numNorm(row1[column], self.mins[column], self.maxes[column])
             b = numNorm(row2[column], self.mins[column], self.maxes[column])
             s1 = s1 - 10.0**(weight * (a-b)/n)
             s2 = s2 - 10.0**(weight * (b-a)/n)
