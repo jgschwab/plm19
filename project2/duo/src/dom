@@ -4,6 +4,8 @@ import json
 import sys
 import random
 
+sample_size = 100
+
 def iteratorFactory(itType):
     if itType == "csv":
         return Iterator(',')
@@ -49,6 +51,8 @@ it = iteratorFactory('csv')
 
 # create header (weights)
 it.getNextLine()
+header = it.line[:-1] + ",>dom"
+print(header)
 while it.line.find(',') is -1 :
     it.getNextLine()
 
@@ -69,8 +73,8 @@ while len(token) > 0:
       
 it.getNextLine()
 data = []
-maxes = [-999999999] * 8
-mins =   [999999999] * 8
+maxes = [-999999999] * len(weights)
+mins =   [999999999] * len(weights)
 
 while len(it.line) > 0:
     row = [] 
@@ -89,12 +93,24 @@ while len(it.line) > 0:
     data.append(row)
     it.getNextLine()
 
-n = 100 #TODO config?
+n = min(sample_size, len(data))
 for i in range(len(data)):
     sample = random.sample(data, n)
     row = data[i]
     
     req = "{\"weights\": " + json.dumps(weights) + ", \"row\": " +  json.dumps(data[i]) + ", \"sample\": " + json.dumps(sample) + ", \"mins\":" + json.dumps(mins) + ", \"maxes\":" + json.dumps(maxes) + "}"
+<<<<<<< HEAD
     
     print(server.mock_request("POST", "domScoredData", req))
+=======
+    #print(req)
+    dom_scores, response_code = server.mock_request("POST", "domScoredData", req)
+    
+    if response_code != 200:
+        print("Error response: " + dom_scores)
+    else:
+        s = ","
+        score = json.loads(dom_scores)
+        print(s.join(str(e) for e in score))
+>>>>>>> c32bddd848d55ce8e5c2b2a8b5e04fbd82462360
   

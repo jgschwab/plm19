@@ -60,6 +60,8 @@ class Table:
         n = float(len(self.weights))
         s1, s2 = 0.0, 0.0
         for column, weight in enumerate(self.weights):
+            if weight == 0:
+                continue
             a = numNorm(row1[column], self.mins[column], self.maxes[column])
             b = numNorm(row2[column], self.mins[column], self.maxes[column])
             s1 = s1 - 10.0**(weight * (a-b)/n)
