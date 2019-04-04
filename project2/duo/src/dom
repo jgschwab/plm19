@@ -53,7 +53,7 @@ it = iteratorFactory('csv')
 it.getNextLine()
 header = it.line[:-1] + ",>dom"
 print(header)
-while it.line.find(',') is -1 :
+while it.line.find(it.delim) is -1 :
     it.getNextLine()
 
 
@@ -61,9 +61,9 @@ token = it.getNext()
 weights = []
 
 while len(token) > 0:
-    if token[0] == '>':
+    if token.find('>') is not -1:
         weights.append(1)
-    elif token[0] == "<":
+    elif token.find('<') is not -1:
         weights.append(-1)
     else:
         weights.append(0)
