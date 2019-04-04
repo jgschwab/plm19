@@ -73,8 +73,8 @@ while len(token) > 0:
       
 it.getNextLine()
 data = []
-maxes = [-999999999] * 8
-mins =   [999999999] * 8
+maxes = [-999999999] * len(weights)
+mins =   [999999999] * len(weights)
 
 while len(it.line) > 0:
     row = [] 
