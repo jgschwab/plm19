@@ -99,10 +99,6 @@ for i in range(len(data)):
     row = data[i]
     
     req = "{\"weights\": " + json.dumps(weights) + ", \"row\": " +  json.dumps(data[i]) + ", \"sample\": " + json.dumps(sample) + ", \"mins\":" + json.dumps(mins) + ", \"maxes\":" + json.dumps(maxes) + "}"
-<<<<<<< HEAD
-    
-    print(server.mock_request("POST", "domScoredData", req))
-=======
     #print(req)
     dom_scores, response_code = server.mock_request("POST", "domScoredData", req)
     
@@ -112,5 +108,4 @@ for i in range(len(data)):
         s = ","
         score = json.loads(dom_scores)
         print(s.join(str(e) for e in score))
->>>>>>> c32bddd848d55ce8e5c2b2a8b5e04fbd82462360
   
