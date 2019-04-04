@@ -4,6 +4,8 @@ import json
 import sys
 import random
 
+sample_size = 100
+
 def iteratorFactory(itType):
     if itType == "csv":
         return Iterator(',')
@@ -89,12 +91,12 @@ while len(it.line) > 0:
     data.append(row)
     it.getNextLine()
 
-n = 100 #TODO config?
+n = min(sample_size, len(data))
 for i in range(len(data)):
     sample = random.sample(data, n)
     row = data[i]
     
     req = "{\"weights\": " + json.dumps(weights) + ", \"row\": " +  json.dumps(data[i]) + ", \"sample\": " + json.dumps(sample) + ", \"mins\":" + json.dumps(mins) + ", \"maxes\":" + json.dumps(maxes) + "}"
-    print(req)
-    server.mock_request("POST", "domScoredData", req)
+    #print(req)
+    print(server.mock_request("POST", "domScoredData", req))
   
