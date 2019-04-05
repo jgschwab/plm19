@@ -68,16 +68,16 @@ while len(token) > 0:
     else:
         weights.append(0)
     token = it.getNext()
-    
+
 #print(json.dumps(weights)) #debug
-      
+
 it.getNextLine()
 data = []
 maxes = [-999999999] * len(weights)
 mins =   [999999999] * len(weights)
 
 while len(it.line) > 0:
-    row = [] 
+    row = []
     token = it.getNext()
     i = 0
     while len(token) > 0:
