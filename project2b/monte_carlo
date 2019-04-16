@@ -1,6 +1,5 @@
 #!/usr/bin/env coffee
 
-
 fs = require 'fs'
 configFile = 'config'
 
@@ -12,19 +11,51 @@ console.log config
 fields = []
 
 # -------- SINGLETON CLASS --------
-class Singleton
-
+class Generator
   instance = null
-  
-  class Generator
-    constructor: (param) ->
-    @param = random param
-    
-    @generate: (min, max) -> 
-      
-    
-  @get: () ->
-    instance ?= new Generator()
+
+  class ActualGenerator
+    # Middle square method with Weyl sequence
+    # https://en.wikipedia.org/wiki/Middle-square_method#Middle_Square_Weyl_Sequence_PRNG
+    # https://pthree.org/2018/07/30/middle-square-weyl-sequence-prng/
+
+    # Initialize the generator with a given seed
+    constructor: (seed) ->
+        # Define instance parameters
+        @params = { x: 0, weyl: 0, seed: seed, result: 0 }
+
+    # Pipe and filter stages. Parameters are passed in an environment object
+    multiply = (params) ->
+        params.x *= params.x
+        params
+
+    add = (params) ->
+        params.weyl += params.seed
+        params.x += params.weyl
+        params
+
+    middle = (params) ->
+        params.x = params.x << 32 | params.x >> 32
+        params
+
+    normalize = (params) ->
+        params.result = Number("0." + Math.abs params.x)
+        params
+
+    # --- Pipe and filter --- #
+    random = (params) ->
+        normalize middle add multiply params
+
+    generate: (min, max) ->
+        # Update instance variable parameters at each iteration
+        @params = random @params
+        # Return the latest result scaled to fit min and max
+        @params.result * (max - min) + min
+
+
+  @getInstance: (seed) ->
+    instance ?= new ActualGenerator(seed)
+
 # ---------------------------------
 
 # -------- STATE MACHINE ----------
@@ -80,30 +111,6 @@ reader = new StateMachineReader config
 reader.next() until reader.state is "done"
 #console.log fields
 
-gen = Singleton.get()
-
-for field, i in fields
-    process.stdout.write field.name
-    (process.stdout.write) ", " if i < fields.length - 1
-process.stdout.write "\n"
-
-
-num = 10
-for [0...num]
-    for field, i in fields
-        process.stdout.write gen.generate(field.min, field.max)
-        (process.stdout.write) ", " if i < fields.length - 1
-    process.stdout.write "\n"
-
-
-
-
-
-# Middle square method with Weyl sequence
-# https://en.wikipedia.org/wiki/Middle-square_method#Middle_Square_Weyl_Sequence_PRNG
-# https://pthree.org/2018/07/30/middle-square-weyl-sequence-prng/
-
-n = 100
 # Default seed is last 4 digits of unix time
 seed = Number(String((new Date).getTime()).substr(8))
 
@@ -116,38 +123,23 @@ for arg in process.argv
         seed = Number(process.argv[i + 1])
     i++
 
-
-# Pipeline stages for number generation
-multiply = (params) ->
-    params.x *= params.x
-    params
-
-add = (params) ->
-    params.weyl += params.seed
-    params.x += params.weyl
-    params
-
-middle = (params) ->
-    params.x = params.x << 32 | params.x >> 32
-    params
+gen = Generator.getInstance seed
 
 
-normalize = (params) ->
-    params.result = Number("0." + Math.abs params.x)
-    params
+for field, i in fields
+    process.stdout.write field.name
+    (process.stdout.write) ", " if i < fields.length - 1
+process.stdout.write "\n"
 
 
-# Top level, call all stages of the pipeline
-random = (params) ->
-    normalize middle add multiply params
+num = 10
+for [0...num]
+    for field, i in fields
+        process.stdout.write String(gen.generate(field.min, field.max))
+        (process.stdout.write) ", " if i < fields.length - 1
+    process.stdout.write "\n"
 
 
 
-# Data object for passing through the pipe
-params = { x: 0, weyl: 0, seed: seed, result: 0 }
 
 
-# Print out n "random" numbers
-for _ in [1..n]
-    params = random params
-    console.log params.result
