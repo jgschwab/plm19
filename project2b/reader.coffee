@@ -54,5 +54,24 @@ class StateMachineReader
 reader = new StateMachineReader config
 
 reader.next() until reader.state is "done"
-console.log fields
+#console.log fields
+
+gen = Singleton.get()
+
+
+for field, i in fields
+    process.stdout.write field.name
+    (process.stdout.write) ", " if i < fields.length - 1
+process.stdout.write "\n"
+
+
+num = 10
+for [0...num]
+    for field, i in fields
+        process.stdout.write gen.generate(field.min, field.max)
+        (process.stdout.write) ", " if i < fields.length - 1
+    process.stdout.write "\n"
+
+
+
 
