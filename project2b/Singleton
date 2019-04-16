@@ -1,0 +1,12 @@
+class Singleton
+
+  instance = null
+  
+  class Generator
+    constructor: () ->
+    
+    @generate: (min, max) -> 
+      
+    
+  @get: ()
+    instance ?= new Generator()
