@@ -1,0 +1,3 @@
+class attribute
+  constructor:(@name,@min,@max) ->
+  
