@@ -116,6 +116,7 @@ seed = Number(String((new Date).getTime()).substr(8))
 
 # Parse arguments -n and -s
 i = 0
+n = 10
 for arg in process.argv
     if arg == "-n"
         n = Number(process.argv[i + 1])
@@ -132,8 +133,7 @@ for field, i in fields
 process.stdout.write "\n"
 
 
-num = 10
-for [0...num]
+for [0...n]
     for field, i in fields
         process.stdout.write String(gen.generate(field.min, field.max))
         (process.stdout.write) ", " if i < fields.length - 1
