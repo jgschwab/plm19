@@ -7,7 +7,7 @@ read = () ->
     fs.readFileSync configFile, 'utf8'
     
 config = read()    
-console.log config
+#console.log config
 fields = []
 
 # -------- SINGLETON CLASS --------
@@ -93,11 +93,11 @@ class StateMachineReader
                 @index += 1
                 return 0
             when "rowEnd"
+                fields.push {name: @name, min: @min, max: @max}
                 if @index is @input.length
                     @state = "done"
                 else
                     @state = "name"
-                    fields.push {name: @name, min: @min, max: @max}
                     @name = ""
                     @min = ""
                     @max = ""
@@ -117,27 +117,25 @@ seed = Number(String((new Date).getTime()).substr(8))
 # Parse arguments -n and -s
 i = 0
 n = 10
+verbose = false
 for arg in process.argv
     if arg == "-n"
         n = Number(process.argv[i + 1])
     if arg == "-s"
         seed = Number(process.argv[i + 1])
+    if arg == "-v"
+        verbose = process.argv[i + 1]
     i++
 
 gen = Generator.getInstance seed
 
-
-for field, i in fields
-    process.stdout.write field.name
-    (process.stdout.write) ", " if i < fields.length - 1
-process.stdout.write "\n"
-
-
 for [0...n]
+    process.stdout.write "{"
     for field, i in fields
+        process.stdout.write "'" + field.name + "': "
         process.stdout.write String(gen.generate(field.min, field.max))
-        (process.stdout.write) ", " if i < fields.length - 1
-    process.stdout.write "\n"
+        (process.stdout.write ", ") if (i < fields.length - 1)
+    if verbose then process.stdout.write ", 'verbose': True}\n" else process.stdout.write ", 'verbose': False}\n"
 
 
 
