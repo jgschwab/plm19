@@ -5,7 +5,8 @@
 
 n = 100
 # Default seed is last 4 digits of unix time
-seed = Number(String((new Date).getTime()).substr(8))
+seed = Number(String((new Date).getTime()).substr(8)) & 0xffff
+console.log seed.toString(16)
 
 # Parse arguments -n and -s
 i = 0
@@ -28,12 +29,12 @@ add = (params) ->
     params
 
 middle = (params) ->
-    params.x = params.x << 32 | params.x >> 32
+    params.x = params.x >>> 8 & 0xffff
     params
 
 
 normalize = (params) ->
-    params.result = Number("0." + Math.abs params.x)
+    params.result = params.x / (Math.pow(2, 16) - 1)
     params
 
 
