@@ -5,8 +5,8 @@ configFile = 'config'
 
 read = () ->
     fs.readFileSync configFile, 'utf8'
-    
-config = read()    
+
+config = read()
 console.log config
 fields = []
 
@@ -35,11 +35,12 @@ class Generator
         params
 
     middle = (params) ->
-        params.x = params.x << 32 | params.x >> 32
+        params.x = params.x >>> 8 & 0xffff
         params
 
+
     normalize = (params) ->
-        params.result = Number("0." + Math.abs params.x)
+        params.result = params.x / (Math.pow(2, 16))
         params
 
     # --- Pipe and filter --- #
@@ -51,7 +52,6 @@ class Generator
         @params = random @params
         # Return the latest result scaled to fit min and max
         @params.result * (max - min) + min
-
 
   @getInstance: (seed) ->
     instance ?= new ActualGenerator(seed)
@@ -66,7 +66,7 @@ class StateMachineReader
         @name = ""
         @min = ""
         @max = ""
-    
+
     next: ->
         switch @state
             when "name"
@@ -101,8 +101,7 @@ class StateMachineReader
                     @name = ""
                     @min = ""
                     @max = ""
-                return 0  
-                
+                return 0
 # ---------------------------------
 
 
@@ -111,10 +110,10 @@ reader = new StateMachineReader config
 reader.next() until reader.state is "done"
 #console.log fields
 
-# Default seed is last 4 digits of unix time
-seed = Number(String((new Date).getTime()).substr(8))
+# Default seed for random number
+seed = (new Date).getTime() & 0xffff
 
-# Parse arguments -n and -s
+# Parse arguments -n and -s (number of lines and seed)
 i = 0
 n = 10
 for arg in process.argv
@@ -124,15 +123,19 @@ for arg in process.argv
         seed = Number(process.argv[i + 1])
     i++
 
+# Request the singleton with the given seed.
+# If one already exists, the existing one is returned and the seed is ignored.
 gen = Generator.getInstance seed
 
 
+# Print csv headers
 for field, i in fields
     process.stdout.write field.name
     (process.stdout.write) ", " if i < fields.length - 1
 process.stdout.write "\n"
 
 
+# Generate random values
 for [0...n]
     for field, i in fields
         process.stdout.write String(gen.generate(field.min, field.max))
