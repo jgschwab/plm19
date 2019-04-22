@@ -7,7 +7,6 @@ read = () ->
     fs.readFileSync configFile, 'utf8'
 
 config = read()
-console.log config
 fields = []
 
 # -------- SINGLETON CLASS --------
@@ -113,14 +112,18 @@ reader.next() until reader.state is "done"
 # Default seed for random number
 seed = (new Date).getTime() & 0xffff
 
+verbose = "False"
+
 # Parse arguments -n and -s (number of lines and seed)
 i = 0
-n = 10
+n = 1 # Default number of lines is just one
 for arg in process.argv
     if arg == "-n"
         n = Number(process.argv[i + 1])
     if arg == "-s"
         seed = Number(process.argv[i + 1])
+    if arg == "-v"
+        verbose = "True"
     i++
 
 # Request the singleton with the given seed.
@@ -129,18 +132,21 @@ gen = Generator.getInstance seed
 
 
 # Print csv headers
-for field, i in fields
-    process.stdout.write field.name
-    (process.stdout.write) ", " if i < fields.length - 1
-process.stdout.write "\n"
+#for field, i in fields
+#    process.stdout.write field.name
+#    (process.stdout.write) ", " if i < fields.length - 1
+#process.stdout.write "\n"
+
+console.log fields
 
 
 # Generate random values
 for [0...n]
+    process.stdout.write("{")
     for field, i in fields
-        process.stdout.write String(gen.generate(field.min, field.max))
-        (process.stdout.write) ", " if i < fields.length - 1
-    process.stdout.write "\n"
+        value = gen.generate(field.min, field.max)
+        process.stdout.write("'#{field.name}': #{value.toFixed(2)}, ")
+    process.stdout.write "'verbose': #{verbose}}\n"
 
 
 
