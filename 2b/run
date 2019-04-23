@@ -4,6 +4,8 @@ sudo chmod +x ../project2b/*
 sudo apt-get update
 sudo apt-get install -y python3 python3-pip python3-setuptools lua5.3 luajit
 sudo apt-get install -y nodejs
+# Package name is nodejs but executable should be 'node'
+sudo ln -s /usr/bin/nodejs /usr/bin/node
 sudo apt-get install -y npm
 sudo npm install --global coffeescript
 
