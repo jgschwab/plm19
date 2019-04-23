@@ -3,6 +3,8 @@
 sudo chmod +x ../project2b/*
 sudo apt-get update
 sudo apt-get install -y python3 python3-pip python3-setuptools lua5.3 luajit
+# Setup official node package source for latest version
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 sudo apt-get install -y nodejs
 # Package name is nodejs but executable should be 'node'
 sudo ln -s /usr/bin/nodejs /usr/bin/node
