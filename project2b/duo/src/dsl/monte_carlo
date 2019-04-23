@@ -136,8 +136,3 @@ for [0...n]
         process.stdout.write String(gen.generate(field.min, field.max))
         (process.stdout.write ", ") if (i < fields.length - 1)
     if verbose then process.stdout.write ", 'verbose': True}\n" else process.stdout.write ", 'verbose': False}\n"
-
-
-
-
-

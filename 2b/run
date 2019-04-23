@@ -1,0 +1,18 @@
+#! /usr/bin/env bash
+
+sudo chmod +x ../project2b/*
+sudo apt-get update
+sudo apt-get install -y python3 python3-pip python3-setuptools lua5.3 luajit
+sudo apt-get install -y nodejs
+sudo apt-get install -y npm
+sudo npm install --global coffeescript
+
+cd ../project2b
+mkdir installs && cd installs
+git clone git://github.com/pycco-docs/pycco.git
+cd pycco
+sudo python3 setup.py install
+
+cd ../../duo/src
+../etc/ide
+
